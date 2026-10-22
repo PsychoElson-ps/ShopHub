@@ -1,0 +1,53 @@
+@catalog = http://localhost:5002
+@order = http://localhost:5004
+@userId = 7d8b6d41-1bd1-4b9a-8bf6-3bfaa18cc101
+@productId = 3fa85f64-5717-4562-b3fc-2c963f66afa6
+
+### Catalog health
+GET {{catalog}}/health
+
+### Catalog list
+GET {{catalog}}/api/products?page=1&pageSize=20
+
+### Create product
+POST {{catalog}}/api/products
+Content-Type: application/json
+
+{
+  "name": "Тестовая клавиатура",
+  "description": "Механическая клавиатура для демонстрации КТ-4",
+  "price": 7990,
+  "stock": 50,
+  "category": "Периферия"
+}
+
+### Check availability
+GET {{catalog}}/api/products/{{productId}}/availability?quantity=2
+
+### Order health
+GET {{order}}/health
+
+### Create order
+POST {{order}}/api/orders
+X-User-Id: {{userId}}
+Content-Type: application/json
+
+{
+  "items": [
+    { "productId": "{{productId}}", "quantity": 2 }
+  ],
+  "shippingAddress": {
+    "street": "ул. Тестовая, д. 1",
+    "city": "Москва",
+    "zipCode": "101000"
+  },
+  "userEmail": "test@example.com",
+  "comment": "Позвонить перед доставкой"
+}
+
+### Get my orders
+GET {{order}}/api/orders
+X-User-Id: {{userId}}
+
+### Notification health
+GET http://localhost:5006/health
